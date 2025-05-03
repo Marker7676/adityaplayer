@@ -85,34 +85,34 @@ clinks = {}
 
 
 if API_ID == 0:
-    logs.info("⚠️ 'API_ID' - Not Found !!")
+    logs.info("⚠️ 'API_ID' - Bulunamadı !!")
     sys.exit()
 if not API_HASH:
-    logs.info("⚠️ 'API_HASH' - Not Found !!")
+    logs.info("⚠️ 'API_HASH' - Bulunamadı !!")
     sys.exit()
 if not BOT_TOKEN:
-    logs.info("⚠️ 'BOT_TOKEN' - Not Found !!")
+    logs.info("⚠️ 'BOT_TOKEN' - Bulunamadı !!")
     sys.exit()
 if not STRING_SESSION:
-    logs.info("⚠️ 'STRING_SESSION' - Not Found !!")
+    logs.info("⚠️ 'STRING_SESSION' - Bulunamadı !!")
     sys.exit()
 if not MONGO_DB_URL:
-    logs.info("⚠️ 'MONGO_DB_URL' - Not Found !!")
+    logs.info("⚠️ 'MONGO_DB_URL' - Bulunamadı !!")
     sys.exit()
     
 try:
     adb_cli = AsyncIOMotorClient(MONGO_DB_URL)
 except Exception:
-    logs.info("⚠️ 'MONGO_DB_URL' - Not Valid !!")
+    logs.info("⚠️ 'MONGO_DB_URL' - Geçerli Değil !!")
     sys.exit()
 
 mongodb = adb_cli.adityaplayer
 
 if OWNER_ID == 0:
-    logs.info("⚠️ 'OWNER_ID' - Not Found !!")
+    logs.info("⚠️ 'OWNER_ID' - Bulunamadı !!")
     sys.exit()
 if LOG_GROUP_ID == 0:
-    logs.info("⚠️ 'LOG_GROUP_ID' - Not Found !!")
+    logs.info("⚠️ 'LOG_GROUP_ID' - Bulunamadı !!")
     sys.exit()
 
 
@@ -193,26 +193,26 @@ async def main():
     try:
        await adb_cli.admin.command('ping')
     except Exception:
-        logs.info("⚠️ 'MONGO_DB_URL' - Not Valid !!")
+        logs.info("⚠️ 'MONGO_DB_URL' - Geçerli Değil !!")
         sys.exit()
         
     try:
         await bot.start()
     except Exception as e:
-        logs.info(f"🚫 Failed to start Bot❗\n⚠️ Reason: {e}")
+        logs.info(f"🚫 Bot başlatılamadı❗\n⚠️ Sebep: {e}")
         sys.exit()
     if LOG_GROUP_ID != 0:
         try:
             await bot.send_message(
-                LOG_GROUP_ID, "**✅ Bot Started.**"
+                LOG_GROUP_ID, "**✅ Bot Başlatıldı.**"
             )
         except Exception:
             pass
-    logs.info("✅ Bot Started❗")
+    logs.info("✅ Bot Başlatıldı❗")
     try:
         await app.start()
     except Exception as e:
-        logs.info(f"🚫 Failed to start Assistant❗\n⚠️ Reason: {e}")
+        logs.info(f"🚫 Asistan başlatılamadı❗\n⚠️ Sebep: {e}")
         sys.exit()
     try:
         await app.join_chat("AdityaServer")
@@ -222,15 +222,15 @@ async def main():
     if LOG_GROUP_ID != 0:
         try:
             await app.send_message(
-                LOG_GROUP_ID, "**✅ Assistant Started.**"
+                LOG_GROUP_ID, "**✅ Asistan Başlatıldı.**"
             )
         except Exception:
             pass
-    logs.info("✅ Assistant Started❗")
+    logs.info("✅ Asistan Başlatıldı❗")
     try:
         await call.start()
     except Exception as e:
-        logs.info(f"🚫 Failed to start PyTgCalls❗\n⚠️ Reason: {e}")
+        logs.info(f"🚫 PyTgCalls başlatılamadı❗\n⚠️ Sebep: {e}")
         sys.exit()
     await idle()
 
@@ -383,8 +383,8 @@ async def create_thumbnail(results, user_id):
         vidid = results.get("id")
         title = re.sub("\W+", " ", results.get("title", "")).title()
         duration = format_seconds(results.get("duration", 0))
-        views = f"{format_views(results.get('views', 0))} Views"
-        channel = results.get("channel", "Unknown")
+        views = f"{format_views(results.get('views', 0))} Görüntüleme"
+        channel = results.get("channel", "Bilinmiyor")
         thumbnail = results.get("thumbnail", START_IMAGE_URL)
         image_path = await fetch_and_save_image(thumbnail, f"cache/temp_{vidid}.png")
         logo_path = await get_user_logo(user_id)
@@ -428,7 +428,7 @@ async def create_thumbnail(results, user_id):
         line_length = 580
         line_color = random_color()
 
-        if duration != "Live":
+        if duration != "Canlı":
             color_line_percentage = random.uniform(0.15, 0.85)
             color_line_length = int(line_length * color_line_percentage)
             white_line_length = line_length - color_line_length
@@ -449,14 +449,14 @@ async def create_thumbnail(results, user_id):
         return f"cache/{vidid}_{user_id}.png"
 
     except Exception as e:
-        print(f"Thumbnail Error: {e}")
+        print(f"Küçük Resim Hatası: {e}")
         return results.get("thumbnail", START_IMAGE_URL)
 
 
     
 
 async def add_active_media_chat(chat_id, stream_type):
-    if stream_type == "Audio":
+    if stream_type == "Ses":
         if chat_id in active_video_chats:
             active_video_chats.remove(chat_id)
         if chat_id not in active_audio_chats:
@@ -533,28 +533,28 @@ async def log_stream_info(chat_id, title, duration, stream_type, chat_link, ment
             [
                 [
                     InlineKeyboardButton(
-                        text="📡 Join Chat 💬", url=chat_link
+                        text="📡 Sohbete Katıl 💬", url=chat_link
                     )
                 ],
             ]
         )
         if pos != 0:
             caption = f"""
-**✅ Added To Queue At: #{pos}**
+**✅ Sıraya Eklendi: #{pos}**
 
-**❍ Title:** {title}
-**❍ Duration:** {duration}
-**❍ Stream Type:** {stream_type}
-**❍ Requested By:** {mention}"""
+**❍ Başlık:** {title}
+**❍ Süre:** {duration}
+**❍ Yayın Türü:** {stream_type}
+**❍ İsteyen:** {mention}"""
 
         else:
             caption = f"""
-**✅ Started Streaming On VC.**
+**✅ Sesli Sohbette Yayın Başladı.**
 
-**❍ Title:** {title}
-**❍ Duration:** {duration}
-**❍ Stream Type:** {stream_type}
-**❍ Requested By:** {mention}"""
+**❍ Başlık:** {title}
+**❍ Süre:** {duration}
+**❍ Yayın Türü:** {stream_type}
+**❍ İsteyen:** {mention}"""
         
         try:
             await bot.send_photo(LOG_GROUP_ID, photo=thumbnail, caption=caption, reply_markup=buttons)
@@ -571,11 +571,11 @@ async def change_stream(chat_id):
         queued.pop(0)
         
     if not queued:
-        await bot.send_message(chat_id, "**❎ Queue is empty, So left\nfrom VC❗...**")
+        await bot.send_message(chat_id, "**❎ Sıra boş, bu yüzden\nsesli sohbetten ayrıldım❗...**")
         return await close_stream(chat_id)
 
     aux = await bot.send_message(
-        chat_id, "**🔁 Processing ✨...**"
+        chat_id, "**🔁 İşleniyor ✨...**"
     )
     pos  = 0
     media_stream = queued[0].get("media_stream")
@@ -592,18 +592,18 @@ async def change_stream(chat_id):
         [
             [
                 InlineKeyboardButton(
-                    text="🗑️ Close", callback_data="force_close"
+                    text="🗑️ Kapat", callback_data="force_close"
                 )
             ],
         ]
     )
     caption = f"""
-**✅ Started Streaming On VC.**
+**✅ Sesli Sohbette Yayın Başladı.**
 
-**❍ Title:** {title}
-**❍ Duration:** {duration}
-**❍ Stream Type:** {stream_type}
-**❍ Requested By:** {mention}"""
+**❍ Başlık:** {title}
+**❍ Süre:** {duration}
+**❍ Yayın Türü:** {stream_type}
+**❍ İsteyen:** {mention}"""
     try:
         await aux.delete()
     except Exception:
@@ -629,23 +629,24 @@ async def start_welcome_private(client, message):
     await add_served_user(chat_id)
     photo = START_IMAGE_URL
     mention = message.from_user.mention
-    caption = f"""**✅ Hello, {mention}
+    caption = f"""**✅ Merhaba, {mention}
 
-❍ i am an advanced, latest & verƴ
-powerƒul vc music player bot.
+❍ Ben gelişmiş, en son ve çok
+güçlü bir sesli sohbet müzik botuyum.
 
-❍ ƒeel ƒree to use me in your chat
-& share with your other ƒriends.**"""
+❍ Beni sohbetinizde kullanmaktan ve
+diğer arkadaşlarınızla paylaşmaktan
+çekinmeyin.**"""
     buttons = InlineKeyboardMarkup(
         [
             [
                 InlineKeyboardButton(
-                    text="➕ Add Me in Your Chat ➕", url=f"https://t.me/{client.me.username}?startgroup=true",
+                    text="➕ Beni Sohbetine Ekle ➕", url=f"https://t.me/{client.me.username}?startgroup=true",
                 )
             ],
             [
                 InlineKeyboardButton(
-                    text="⚙ Open All Commands ⚙", callback_data="help_menu"
+                    text="⚙ Tüm Komutları Aç ⚙", callback_data="help_menu"
                 )
             ],
         ]
@@ -663,25 +664,24 @@ powerƒul vc music player bot.
 async def open_help_menu_private(client, message):
     chat_id = message.chat.id
     photo = START_IMAGE_URL
-    caption = f"""**✅ These are The Commands and
-Their Uses.
+    caption = f"""**✅ İşte Komutlar ve Kullanımları.
 
-/play - play music by name.
-/vplay - play video by name.
-/pause - pause running stream.
-/resume - resume paused stream.
-/skip - skip to next stream.
-/end - stop stream & clear queue.**"""
+/oynat - isimle müzik çal.
+/voynat - isimle video oynat.
+/durdur - çalan yayını duraklat.
+/devam - duraklatılmış yayını devam ettir.
+/geç - sonraki yayına geç.
+/son - yayını durdur ve sırayı temizle.**"""
     buttons = InlineKeyboardMarkup(
         [
             [
                 InlineKeyboardButton(
-                    text="➕ Add Me in Your Chat ➕", url=f"https://t.me/{client.me.username}?startgroup=true",
+                    text="➕ Beni Sohbetine Ekle ➕", url=f"https://t.me/{client.me.username}?startgroup=true",
                 )
             ],
             [
                 InlineKeyboardButton(
-                    text="🏠 Back To Home Menu 🏠", callback_data="home_menu"
+                    text="🏠 Ana Menüye Dön 🏠", callback_data="home_menu"
                 )
             ],
         ]
@@ -696,7 +696,7 @@ Their Uses.
 
 
 
-@bot.on_message(filters.command(["play", "vplay"]) & ~filters.private)
+@bot.on_message(filters.command(["oynat", "voynat"]) & ~filters.private)
 async def start_audio_stream(client, message):
     try:
         await message.delete()
@@ -738,25 +738,25 @@ async def start_audio_stream(client, message):
         if len(message.command) < 2:
             return await client.send_message(
                 chat_id, f"""
-**🥀 Give Me Some Query To
-Stream Audio Or Video❗...
+**🥀 Ses veya Video Yayınlamak İçin
+Bana Bir Sorgu Verin❗...
 
-ℹ️ Example:
-≽ Audio: `/play yalgaar`
-≽ Video: `/vplay yalgaar`**"""
+ℹ️ Örnek:
+≽ Ses: `/oynat sagopa`
+≽ Video: `/voynat sagopa`**"""
             )
-        aux = await client.send_message(chat_id, "**🔁 Processing ✨...**")
+        aux = await client.send_message(chat_id, "**🔁 İşleniyor ✨...**")
         query = message.text.split(None, 1)[1]
-        streamtype = "Audio" if not message.command[0].startswith("v") else "Video"
+        streamtype = "Ses" if not message.command[0].startswith("v") else "Video"
         info = await get_stream_info(query, streamtype)
         if not info:
-            return await aux.edit("**❌ Failed to fecth details, try\nanother song.**")
+            return await aux.edit("**❌ Detayları getirilemedi, başka\nbir şarkı deneyin.**")
             
         link = info.get("link")
         title = f"[{info.get('title')[:18]}]({link})"
         duration = f"""{
-            format_seconds(info.get('duration')) + ' Mins'
-            if info.get('duration') else 'Live Stream'
+            format_seconds(info.get('duration')) + ' Dakika'
+            if info.get('duration') else 'Canlı Yayın'
         }"""
         views = format_views(info.get("views"))
         image = info.get("thumbnail")
@@ -777,7 +777,7 @@ Stream Audio Or Video❗...
             [
                 [
                     InlineKeyboardButton(
-                        text="🗑️ Close", callback_data="force_close"
+                        text="🗑️ Kapat", callback_data="force_close"
                     )
                 ],
             ]
@@ -790,15 +790,14 @@ Stream Audio Or Video❗...
                 chat_id, media_stream, thumbnail, title, duration, stream_type, chat_link, mention
             )
             caption = f"""
-**✅ Added To Queue At: #{pos}**
+**✅ Sıraya Eklendi: #{pos}**
 
-**❍ Title:** {title}
-**❍ Duration:** {duration}
-**❍ Stream Type:** {stream_type}
-**❍ Requested By:** {mention}"""
+**❍ Başlık:** {title}
+**❍ Süre:** {duration}
+**❍ Yayın Türü:** {stream_type}
+**❍ İsteyen:** {mention}"""
         
-        else:
-            try: 
+        try: 
                 await call.play(chat_id, media_stream, config=call_config)
             except NoActiveGroupCall:
                 try:
@@ -808,11 +807,11 @@ Stream Audio Or Video❗...
                         or assistant.status == ChatMemberStatus.RESTRICTED
                     ):
                         return await aux.edit_text(
-                            f"**🤖 At first, unban [Assistant ID](https://t.me/{app.me.username}) to start stream❗**"
+                            f"**🤖 Öncelikle yayın başlatmak için [Asistan ID](https://t.me/{app.me.username}) yasağını kaldırın❗**"
                         )
                 except ChatAdminRequired:
                     return await aux.edit_text(
-                        "**🤖 At first, Promote me as an admin❗**"
+                        "**🤖 Öncelikle beni yönetici olarak yükseltin❗**"
                     )
                 except UserNotParticipant:
                     if message.chat.username:
@@ -826,11 +825,11 @@ Stream Audio Or Video❗...
                             invitelink = await client.export_chat_invite_link(chat_id)
                         except ChatAdminRequired:
                             return await aux.edit_text(
-                                "**🤖 Hey, I need invite user permission to add Assistant ID❗**"
+                                "**🤖 Hey, Asistanı eklemek için kullanıcı davet izni lazım❗**"
                             )
                         except Exception as e:
                             return await aux.edit_text(
-                                f"**🚫 Assistant Error:** `{e}`"
+                                f"**🚫 Asistan Hatası:** `{e}`"
                             )
                     clinks[chat_id] = invitelink
                     try:
@@ -841,32 +840,32 @@ Stream Audio Or Video❗...
                             await client.approve_chat_join_request(chat_id, app.me.id)
                         except Exception as e:
                             return await aux.edit_text(
-                                f"**🚫 Approve Error:** `{e}`"
+                                f"**🚫 Onay Hatası:** `{e}`"
                             )
                     except UserAlreadyParticipant:
                         pass
                     except Exception as e:
                         return await aux.edit_text(
-                            f"**🚫 Assistant Join Error:** `{e}`"
+                            f"**🚫 Asistan Katılma Hatası:** `{e}`"
                         )
                 try:
                     await call.play(chat_id, media_stream, config=call_config)
                 except NoActiveGroupCall:
-                    return await aux.edit_text(f"**⚠️ No Active VC❗...**")
+                    return await aux.edit_text(f"**⚠️ Aktif Sesli Sohbet Yok❗...**")
             except TelegramServerError:
-                return await aux.edit_text("**⚠️ Telegram Server Issue❗...**")
+                return await aux.edit_text("**⚠️ Telegram Sunucu Sorunu❗...**")
                 
             thumbnail = await create_thumbnail(info, user_id)
             pos = await put_queue(
                 chat_id, media_stream, thumbnail, title, duration, stream_type, chat_link, mention
             )
             caption = f"""
-**✅ Started Streaming On VC.**
+**✅ Sesli Sohbette Yayın Başladı.**
 
-**❍ Title:** {title}
-**❍ Duration:** {duration}
-**❍ Stream Type:** {stream_type}
-**❍ Requested By:** {mention}"""
+**❍ Başlık:** {title}
+**❍ Süre:** {duration}
+**❍ Yayın Türü:** {stream_type}
+**❍ İsteyen:** {mention}"""
         
         try:
             await aux.delete()
@@ -880,7 +879,7 @@ Stream Audio Or Video❗...
         if "too many open files" in str(e).lower():
             close_all_open_files()
         logs.error(str(e))
-        await aux.edit("**❌ Failed to stream❗...**")
+        await aux.edit("**❌ Yayın başlatılamadı❗...**")
 
 
 @bot.on_message(filters.command("pause") & ~filters.private)
@@ -890,21 +889,21 @@ async def pause_current_stream(client, message):
     queued = queues.get(chat_id)
     if not queued:
         return await message.reply_text(
-            "**❌ Nothing Streaming.**"
+            "**❌ Hiçbir şey yayınlanmıyor.**"
         )
     is_stream = await is_stream_off(chat_id)
     if is_stream:
         return await message.reply_text(
-            "**✅ Stream already Paused.**"
+            "**✅ Yayın zaten Duraklatıldı.**"
         )
     try:
         await call.pause(chat_id)
     except Exception:
         return await message.reply_text(
-            "**❌ Failed to pause stream❗**"
+            "**❌ Yayın duraklatılamadı❗**"
         )
     await stream_off(chat_id)
-    return await message.reply_text("**✅ Stream now Paused.**")
+    return await message.reply_text("**✅ Yayın şimdi Duraklatıldı.**")
     
 
 
@@ -915,21 +914,21 @@ async def resume_current_stream(client, message):
     queued = queues.get(chat_id)
     if not queued:
         return await message.reply_text(
-            "**❌ Nothing Streaming.**"
+            "**❌ Hiçbir şey yayınlanmıyor.**"
         )
     is_stream = await is_stream_off(chat_id)
     if not is_stream:
         return await message.reply_text(
-            "**✅ Stream already Running.**"
+            "**✅ Yayın zaten Çalışıyor.**"
         )
     try:
         await call.resume(chat_id)
     except Exception:
         return await message.reply_text(
-            "**❌ Failed to resume stream❗**"
+            "**❌ Yayın devam ettirilemedi❗**"
         )
     await stream_on(chat_id)
-    return await message.reply_text("**✅ Stream now Resumed.**")
+    return await message.reply_text("**✅ Yayın şimdi Devam Ediyor.**")
     
 
 @bot.on_message(filters.command("end") & ~filters.private)
@@ -939,10 +938,10 @@ async def stop_running_stream(client, message):
     queued = queues.get(chat_id)
     if not queued:
         return await message.reply_text(
-            "**❌ Nothing Streaming.**"
+            "**❌ Hiçbir şey yayınlanmıyor.**"
         )
     await close_stream(chat_id)
-    return await message.reply_text("**❎ Streaming Stopped.**")
+    return await message.reply_text("**❎ Yayın Durduruldu.**")
 
 
 @bot.on_message(filters.command("skip") & ~filters.private)
@@ -952,32 +951,31 @@ async def skip_current_stream(client, message):
     queued = queues.get(chat_id)
     if not queued:
         return await message.reply_text(
-            "**❌ Nothing streaming❗**"
+            "**❌ Hiçbir şey yayınlanmıyor❗**"
         )
     return await change_stream(chat_id)
 
 
 @bot.on_callback_query(filters.regex("help_menu"))
 async def open_help_menu_cb(client, query):
-    caption = f"""**✅ These are The Commands and
-Their Uses.
+    caption = f"""**✅ İşte Komutlar ve Kullanımları.
 
-/play - play music by name.
-/vplay - play video by name.
-/pause - pause running stream.
-/resume - resume paused stream.
-/skip - skip to next stream.
-/end - stop stream & clear queue.**"""
+/play - isimle müzik çal.
+/vplay - isimle video oynat.
+/pause - çalan yayını duraklat.
+/resume - duraklatılmış yayını devam ettir.
+/skip - sonraki yayına geç.
+/end - yayını durdur ve sırayı temizle.**"""
     buttons = InlineKeyboardMarkup(
         [
             [
                 InlineKeyboardButton(
-                    text="➕ Add Me in Your Chat ➕", url=f"https://t.me/{client.me.username}?startgroup=true",
+                    text="➕ Beni Sohbetine Ekle ➕", url=f"https://t.me/{client.me.username}?startgroup=true",
                 )
             ],
             [
                 InlineKeyboardButton(
-                    text="🏠 Back To Home Menu 🏠", callback_data="home_menu"
+                    text="🏠 Ana Menüye Dön 🏠", callback_data="home_menu"
                 )
             ],
         ]
@@ -992,23 +990,24 @@ Their Uses.
 @bot.on_callback_query(filters.regex("home_menu"))
 async def open_help_menu_cb(client, query):
     mention = query.from_user.mention
-    caption = f"""**✅ Hello, {mention}
+    caption = f"""**✅ Merhaba, {mention}
 
-❍ i am an advanced, latest & verƴ
-powerƒul vc music player bot.
+❍ Ben gelişmiş, en son ve çok
+güçlü bir sesli sohbet müzik botuyum.
 
-❍ ƒeel ƒree to use me in your chat
-& share with your other ƒriends.**"""
+❍ Beni sohbetinizde kullanmaktan ve
+diğer arkadaşlarınızla paylaşmaktan
+çekinmeyin.**"""
     buttons = InlineKeyboardMarkup(
         [
             [
                 InlineKeyboardButton(
-                    text="➕ Add Me in Your Chat ➕", url=f"https://t.me/{client.me.username}?startgroup=true",
+                    text="➕ Beni Sohbetine Ekle ➕", url=f"https://t.me/{client.me.username}?startgroup=true",
                 )
             ],
             [
                 InlineKeyboardButton(
-                    text="⚙ Open All Commands ⚙", callback_data="help_menu"
+                    text="⚙ Tüm Komutları Aç ⚙", callback_data="help_menu"
                 )
             ],
         ]
@@ -1031,11 +1030,11 @@ async def check_stats(client, message):
     total_users = len(await get_served_users())
     
     caption = f"""
-**✅ Active Audio Chats:** `{active_audio}`
-**✅ Active Video Chats:** `{active_video}`
+**✅ Aktif Ses Sohbetleri:** `{active_audio}`
+**✅ Aktif Video Sohbetleri:** `{active_video}`
 
-**✅ Total Served Chats:** `{total_chats}`
-**✅ Total Served Users:** `{total_users}`
+**✅ Toplam Hizmet Edilen Sohbetler:** `{total_chats}`
+**✅ Toplam Hizmet Edilen Kullanıcılar:** `{total_users}`
 """
     return await message.reply_text(caption)
 
@@ -1053,8 +1052,8 @@ async def broadcast_message(client, message):
     else:
         if len(message.command) < 2:
             return await message.reply_text(
-                f"""**🤖 Hey Give Me Some Text
-Or Reply To A Message❗**"""
+                f"""**🤖 Hey Bana Bir Metin Ver
+Veya Bir Mesajı Yanıtla❗**"""
             )
         query = message.text.split(None, 1)[1]
         if "-pin" in query:
@@ -1067,8 +1066,8 @@ Or Reply To A Message❗**"""
             query = query.replace("-user", "")
         if query == "":
             return await message.reply_text(
-                f"""**🤖 Hey Give Me Some Text
-Or Reply To A Message❗**"""
+                f"""**🤖 Hey Bana Bir Metin Ver
+Veya Bir Mesajı Yanıtla❗**"""
             )
 
     
@@ -1105,7 +1104,7 @@ Or Reply To A Message❗**"""
                 continue
             except Exception:
                 continue
-        await message.reply_text(f"**✅ Global Broadcast Done.**\n\n__🤖 Broadcast Mesaages In\n{sent} Chats With {pin} Pins.__")
+        await message.reply_text(f"**✅ Genel Yayın Tamamlandı.**\n\n__🤖 {pin} Sabitleme İle\n{sent} Sohbette Yayın Mesajları.__")
 
     
 
@@ -1129,7 +1128,7 @@ Or Reply To A Message❗**"""
                 continue
             except Exception:
                 continue
-        await message.reply_text(f"**✅ Global Broadcast Done.**\n\n__🤖 Broascast Mesaages To\n{susr} Users From Bot.__")
+        await message.reply_text(f"**✅ Genel Yayın Tamamlandı.**\n\n__🤖 Bottan\n{susr} Kullanıcıya Yayın Mesajları.__")
 
 
 
@@ -1147,18 +1146,19 @@ async def post_bot_promotion(client, message):
             
     photo = START_IMAGE_URL
     caption = f"""
-**✅ Hello friends,
+**✅ Merhaba arkadaşlar,
 
-❍ i am an advanced, latest &
-verƴ powerƒul vc player bot.
+❍ Ben gelişmiş, en son ve çok
+güçlü bir sesli sohbet müzik botuyum.
 
-❍ ƒeel ƒree to use me & share
-with your other ƒriends.**"""
+❍ Beni kullanmaktan ve diğer
+arkadaşlarınızla paylaşmaktan
+çekinmeyin.**"""
     buttons = InlineKeyboardMarkup(
         [
             [
                 InlineKeyboardButton(
-                    text="➕ Add Me in Your Chat ➕", url=f"https://t.me/{client.me.username}?startgroup=true",
+                    text="➕ Beni Sohbetine Ekle ➕", url=f"https://t.me/{client.me.username}?startgroup=true",
                 )
             ]
         ]
@@ -1180,7 +1180,7 @@ with your other ƒriends.**"""
             continue
         except Exception:
             continue
-    return await message.reply_text(f"**✅ Successfully posted in {sent} chats.**")
+    return await message.reply_text(f"**✅ Başarıyla {sent} sohbette paylaşıldı.**")
 
 
 
@@ -1228,4 +1228,4 @@ async def stream_end_handler(_, update: Update):
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
     loop.run_until_complete(main())
-    logs.info("❎ Goodbye, Bot Has Been Stopped‼️")
+    logs.info("❎ Hoşçakal, Bot Durduruldu‼️")
