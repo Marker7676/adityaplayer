@@ -59,7 +59,7 @@ LOG_GROUP_ID = int(getenv("LOG_GROUP_ID", 0))
 
 
 # OPTIONAL VARIABLES
-START_IMAGE_URL = getenv("START_IMAGE_URL", "https://graph.org/file/918101d0ad6b1207e6201.png")
+START_IMAGE_URL = getenv("START_IMAGE_URL", "https://imgur.com/a/cQNNW5s")
 
 
 app = Client("App", api_id=API_ID, api_hash=API_HASH, session_string=STRING_SESSION)
@@ -577,7 +577,7 @@ async def change_stream(chat_id):
     aux = await bot.send_message(
         chat_id, "**🔁 İşleniyor ✨...**"
     )
-    pos  = 0
+    pos = 0
     media_stream = queued[0].get("media_stream")
 
     await call.play(chat_id, media_stream, config=call_config)
@@ -670,7 +670,7 @@ async def open_help_menu_private(client, message):
 /voynat - isimle video oynat.
 /durdur - çalan yayını duraklat.
 /devam - duraklatılmış yayını devam ettir.
-/geç - sonraki yayına geç.
+/atla - sonraki yayına geç.
 /son - yayını durdur ve sırayı temizle.**"""
     buttons = InlineKeyboardMarkup(
         [
@@ -742,8 +742,8 @@ async def start_audio_stream(client, message):
 Bana Bir Sorgu Verin❗...
 
 ℹ️ Örnek:
-≽ Ses: `/oynat sagopa`
-≽ Video: `/voynat sagopa`**"""
+≽ Ses: `/oynat yalgaar`
+≽ Video: `/voynat yalgaar`**"""
             )
         aux = await client.send_message(chat_id, "**🔁 İşleniyor ✨...**")
         query = message.text.split(None, 1)[1]
@@ -797,7 +797,8 @@ Bana Bir Sorgu Verin❗...
 **❍ Yayın Türü:** {stream_type}
 **❍ İsteyen:** {mention}"""
         
-        try: 
+        else:
+            try: 
                 await call.play(chat_id, media_stream, config=call_config)
             except NoActiveGroupCall:
                 try:
@@ -825,7 +826,7 @@ Bana Bir Sorgu Verin❗...
                             invitelink = await client.export_chat_invite_link(chat_id)
                         except ChatAdminRequired:
                             return await aux.edit_text(
-                                "**🤖 Hey, Asistanı eklemek için kullanıcı davet izni lazım❗**"
+                                "**🤖 Hey, Asistan ID'yi eklemek için kullanıcı davet izni lazım❗**"
                             )
                         except Exception as e:
                             return await aux.edit_text(
@@ -882,7 +883,7 @@ Bana Bir Sorgu Verin❗...
         await aux.edit("**❌ Yayın başlatılamadı❗...**")
 
 
-@bot.on_message(filters.command("pause") & ~filters.private)
+@bot.on_message(filters.command("durdur") & ~filters.private)
 @chat_admins_only
 async def pause_current_stream(client, message):
     chat_id = message.chat.id
@@ -907,7 +908,7 @@ async def pause_current_stream(client, message):
     
 
 
-@bot.on_message(filters.command("resume") & ~filters.private)
+@bot.on_message(filters.command("devam") & ~filters.private)
 @chat_admins_only
 async def resume_current_stream(client, message):
     chat_id = message.chat.id
@@ -931,7 +932,7 @@ async def resume_current_stream(client, message):
     return await message.reply_text("**✅ Yayın şimdi Devam Ediyor.**")
     
 
-@bot.on_message(filters.command("end") & ~filters.private)
+@bot.on_message(filters.command("son") & ~filters.private)
 @chat_admins_only
 async def stop_running_stream(client, message):
     chat_id = message.chat.id
@@ -944,7 +945,7 @@ async def stop_running_stream(client, message):
     return await message.reply_text("**❎ Yayın Durduruldu.**")
 
 
-@bot.on_message(filters.command("skip") & ~filters.private)
+@bot.on_message(filters.command("atla") & ~filters.private)
 @chat_admins_only
 async def skip_current_stream(client, message):
     chat_id = message.chat.id
@@ -960,12 +961,12 @@ async def skip_current_stream(client, message):
 async def open_help_menu_cb(client, query):
     caption = f"""**✅ İşte Komutlar ve Kullanımları.
 
-/play - isimle müzik çal.
-/vplay - isimle video oynat.
-/pause - çalan yayını duraklat.
-/resume - duraklatılmış yayını devam ettir.
-/skip - sonraki yayına geç.
-/end - yayını durdur ve sırayı temizle.**"""
+/oynat - isimle müzik çal.
+/voynat - isimle video oynat.
+/durdur - çalan yayını duraklat.
+/devam - duraklatılmış yayını devam ettir.
+/atla - sonraki yayına geç.
+/son - yayını durdur ve sırayı temizle.**"""
     buttons = InlineKeyboardMarkup(
         [
             [
@@ -988,7 +989,7 @@ async def open_help_menu_cb(client, query):
 
 
 @bot.on_callback_query(filters.regex("home_menu"))
-async def open_help_menu_cb(client, query):
+async def open_home_menu_cb(client, query):
     mention = query.from_user.mention
     caption = f"""**✅ Merhaba, {mention}
 
